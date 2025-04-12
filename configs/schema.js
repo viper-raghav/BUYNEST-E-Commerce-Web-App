@@ -8,10 +8,10 @@ export const usersTable = pgTable("users", {
   email: varchar({ length: 255 }).notNull().unique(),
 });
 
-export const productTable = pgTable("products", {
+export const productTable = pgTable('products', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   title:varchar().notNull(),
-  price:integer().notNull(),
+  price:integer(),
   description: varchar().notNull(),
   about:text(),
   category: varchar().notNull(),

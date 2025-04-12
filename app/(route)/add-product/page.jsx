@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import ImageUpload from "./_components/imageUpload";
 import { useState } from "react";
 import axios from "axios";
+import { useUser } from "@clerk/nextjs";
 
 function AddProduct() {
   const CategoryOption = [
@@ -28,6 +29,14 @@ function AddProduct() {
     "other",
   ];
   const [formData, setFormData] = useState([]);
+  const { user } = useUser();
+
+  useEffect(() => {
+    setFormData({
+      userEmail: user?.primaryEmailAddress?.emailAddress,
+    });
+  }, [user]);
+
   const handleInputChange = (fieldName, fieldValue) => {
     setFormData((prev) => ({
       ...prev,
@@ -47,8 +56,6 @@ function AddProduct() {
         "Content-Type": "multipart/form-data", // passing JSON data + Files
       },
     });
-
-    console.log(result);
   };
 
   return (
@@ -59,9 +66,7 @@ function AddProduct() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
         <div className="flex flex-col gap-5">
           <ImageUpload
-            onImageSelect={(e) =>
-              handleInputChange(e.target.name, e.target.files[0])
-            }
+            onImageSelect={(e) => handleInputChange("image", e.target.files[0])}
             className="w-20 h-20"
           />
           <div>
@@ -94,12 +99,14 @@ function AddProduct() {
             />
           </div>
           <div>
-            <h4>Price</h4>
+            <h4>price</h4>
             <Input
               type="number"
-              name="Price"
+              name="price"
               placeholder="price"
-              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+              onChange={(e) =>
+                handleInputChange(e.target.name, parseInt(e.target.value))
+              }
             />
           </div>
           <div>
